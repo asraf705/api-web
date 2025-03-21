@@ -99,3 +99,12 @@ Remember to:
 3. Add any specific installation requirements
 4. Modify the license section according to your chosen license
 5. Add any additional features or sections specific to your project
+
+## Deployment
+
+### Cloudflare Workers Deployment
+
+1. Install Wrangler CLI globally:
+```bash
+npm install -g wrangler
+```
