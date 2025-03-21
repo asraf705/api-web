@@ -1,0 +1,129 @@
+.seo-checker {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.seo-checker h2 {
+  color: #0891b2;
+  margin-bottom: 1.5rem;
+}
+
+.url-input {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.url-input input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.url-input input:focus {
+  border-color: #0891b2;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(8, 145, 178, 0.1);
+}
+
+.url-input button {
+  padding: 0.75rem 1.5rem;
+  background-color: #0891b2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.url-input button:hover {
+  background-color: #0369a1;
+}
+
+.url-input button:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.seo-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.result-section {
+  background-color: #f8fafc;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+}
+
+.result-section h3 {
+  color: #1e293b;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.score-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.suggestion {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background-color: #fff;
+  border-left: 4px solid #f59e0b;
+  border-radius: 0 4px 4px 0;
+  color: #92400e;
+}
+
+.keyword-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.keyword-table th,
+.keyword-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.keyword-table th {
+  background-color: #f1f5f9;
+  font-weight: 500;
+}
+
+.error-message {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  border-radius: 6px;
+  color: #dc2626;
+}
+
+@media (max-width: 768px) {
+  .url-input {
+    flex-direction: column;
+  }
+  
+  .seo-results {
+    grid-template-columns: 1fr;
+  }
+}

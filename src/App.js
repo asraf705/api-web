@@ -1,23 +1,19 @@
-import logo from './logo.svg';
+import React from 'react';
+import ApiTester from './components/ApiTester';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <header className="app-header">
+        <h1>API Testing Tool</h1>
       </header>
+      <main className="app-main">
+        <ApiTester />
+      </main>
+      <footer className="app-footer">
+        <p>API Testing Tool © {new Date().getFullYear()}</p>
+      </footer>
     </div>
   );
 }
