@@ -6,6 +6,7 @@ import DataVisualization from './DataVisualization';
 import Settings from './Settings';
 import ApiTemplates from './ApiTemplates';
 import Documentation from './Documentation';
+import { saveLog } from '../utils/logUtils'; // Add this import
 
 
 const ApiTester = () => {
@@ -137,11 +138,40 @@ const ApiTester = () => {
     }
   };
 
+  // Add new state for error messages
+  const [notification, setNotification] = useState(null);
+  const [error, setError] = useState(null);
+
+  // Add loadRequest function inside the component
+  const loadRequest = (item) => {
+    setUrl(item.url);
+    setMethod(item.method);
+    if (item.headers) {
+      if (Array.isArray(item.headers)) {
+        setHeaders(item.headers);
+      } else {
+        const headerArray = Object.entries(item.headers).map(([key, value]) => ({
+          key,
+          value
+        }));
+        setHeaders(headerArray.length > 0 ? headerArray : [{ key: '', value: '' }]);
+      }
+    } else {
+      setHeaders([{ key: '', value: '' }]);
+    }
+    setBody(item.body || '');
+
+    setNotification('Request loaded successfully');
+    setTimeout(() => setNotification(null), 3000);
+  };
+
+  // Update handleSubmit function
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(null); // Reset error state
     const startTime = performance.now();
-  
+
     const requestHeaders = {};
     headers.forEach(header => {
       if (header.key && header.value) {
@@ -149,17 +179,34 @@ const ApiTester = () => {
       }
     });
     setLastRequestHeaders(requestHeaders);
-  
+
     try {
+      // Validate URL before making request
+      if (!url || !url.startsWith('http')) {
+        throw new Error('Please enter a valid URL starting with http or https');
+      }
+
       const response = await fetch(url, {
         method,
         headers: requestHeaders,
         body: method !== 'GET' ? body : undefined
       });
-  
+
       const endTime = performance.now();
       setResponseTime(endTime - startTime);
-      
+
+      // Log successful request
+      saveLog({
+        type: 'request',
+        status: 'success',
+        url,
+        method,
+        headers: requestHeaders,
+        body,
+        responseTime: endTime - startTime,
+        timestamp: new Date().toISOString()
+      });
+
       const responseHeadersObj = {};
       response.headers.forEach((value, key) => {
         responseHeadersObj[key] = value;
@@ -190,43 +237,33 @@ const ApiTester = () => {
         timestamp: new Date().toISOString()
       }]);
     } catch (error) {
+      const endTime = performance.now();
+      setResponseTime(endTime - startTime);
+      
+      // Log error
+      saveLog({
+        type: 'request',
+        status: 'error',
+        url,
+        method,
+        headers: requestHeaders,
+        body,
+        error: error.message,
+        responseTime: endTime - startTime,
+        timestamp: new Date().toISOString()
+      });
+
+      setError(error.message);
       setResponse({
         status: 'Error',
         data: error.message || 'Failed to fetch'
       });
+    } finally {
+      setLoading(false);
     }
-  
-    setLoading(false);
   };
 
-  // Add new functions for history management
-  // Add new state for notification
-  const [notification, setNotification] = useState(null);
-  
-  // Update the loadRequest function
-  const loadRequest = (item) => {
-    setUrl(item.url);
-    setMethod(item.method);
-    if (item.headers) {
-      if (Array.isArray(item.headers)) {
-        setHeaders(item.headers);
-      } else {
-        const headerArray = Object.entries(item.headers).map(([key, value]) => ({
-          key,
-          value
-        }));
-        setHeaders(headerArray.length > 0 ? headerArray : [{ key: '', value: '' }]);
-      }
-    } else {
-      setHeaders([{ key: '', value: '' }]);
-    }
-    setBody(item.body || '');
-  
-    // Show notification
-    setNotification('Request loaded successfully');
-    setTimeout(() => setNotification(null), 3000); // Hide after 3 seconds
-  };
-  
+  // Add error display in the return statement
   return (
     <div className="api-tester">
       <LoadingOverlay isLoading={loading} />
@@ -298,6 +335,12 @@ const ApiTester = () => {
       {notification && (
         <div className="notification">
           {notification}
+        </div>
+      )}
+
+      {error && (
+        <div className="error-message">
+          Error: {error}
         </div>
       )}
 

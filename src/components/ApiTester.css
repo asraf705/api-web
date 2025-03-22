@@ -504,6 +504,14 @@ button.add-header-btn:hover {
 .response-time.slow {
   color: #ef4444;
 }
+.error-message {
+  padding: 15px;
+  margin: 20px 0;
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+}
 
 .api-tester {
   background-color: #f8fafc;
