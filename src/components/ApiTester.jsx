@@ -7,15 +7,15 @@ import Settings from './Settings';
 import ApiTemplates from './ApiTemplates';
 import Documentation from './Documentation';
 import { saveLog } from '../utils/logUtils'; // Add this import
+import PerformanceMonitor from './PerformanceMonitor';
 
 
 const ApiTester = () => {
   // Add this with other state declarations at the top
   const [showDocs, setShowDocs] = useState(false);
-
-
-  // Add these state declarations at the top with other states
+  const [showPerformance, setShowPerformance] = useState(false); // Add this line
   const [showSettings, setShowSettings] = useState(false);
+  
   const [settings, setSettings] = useState(() => {
     const savedSettings = localStorage.getItem('apiTesterSettings');
     return savedSettings ? JSON.parse(savedSettings) : {
@@ -303,8 +303,23 @@ const ApiTester = () => {
         >
           {showDocs ? 'Hide Docs' : 'Documentation'}
         </button>
+        
+        <button 
+          type="button" 
+          className="toolbar-btn"
+          onClick={() => setShowPerformance(!showPerformance)}
+        >
+          {showPerformance ? 'Hide Performance' : 'Performance'}
+        </button>
       </div>
-      
+
+      {/* Add PerformanceMonitor component after toolbar */}
+      {showPerformance && (
+        <div className="performance-section">
+          <PerformanceMonitor />
+        </div>
+      )}
+
       {/* Add Documentation component after toolbar and before form */}
       {showDocs && <Documentation onClose={() => setShowDocs(false)} />}
 

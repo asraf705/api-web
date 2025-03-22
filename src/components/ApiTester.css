@@ -783,53 +783,22 @@ button.add-header-btn {
 }
 
 /* Performance Indicators */
-.performance-indicator {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  margin-left: 0.5rem;
+.performance-section {
+  margin: 1.5rem 0;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.3s ease-out;
 }
 
-.performance-indicator.good {
-  background-color: #dcfce7;
-  color: #059669;
-}
-
-.performance-indicator.warning {
-  background-color: #fef3c7;
-  color: #d97706;
-}
-
-.performance-indicator.critical {
-  background-color: #fee2e2;
-  color: #dc2626;
-}
-
-/* Performance Alert Toast */
-.performance-alert {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 1rem;
-  border-radius: 4px;
-  background-color: #fee2e2;
-  color: #dc2626;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  animation: slideUp 0.3s ease-out;
-  z-index: 1000;
-}
-
-@keyframes slideUp {
+@keyframes fadeIn {
   from {
-    transform: translateY(100%);
     opacity: 0;
+    transform: translateY(-10px);
   }
   to {
-    transform: translateY(0);
     opacity: 1;
+    transform: translateY(0);
   }
 }
 

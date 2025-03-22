@@ -33,6 +33,20 @@ const Documentation = ({ onClose }) => {
         }
       ]
     },
+    'performance': {
+      icon: '📊',
+      title: 'Performance Monitoring',
+      content: [
+        {
+          title: 'Real-Time Metrics',
+          text: '• Response Time Tracking\n• Error Rate Analysis\n• Request Success Rate\n• Performance Trends\n• Historical Data Analysis'
+        },
+        {
+          title: 'Performance Features',
+          text: '• Set custom performance thresholds\n• Visual performance graphs\n• Response time alerts\n• Export performance data\n• Performance optimization tips'
+        }
+      ]
+    },
     'tips': {
       icon: '💡',
       title: 'Pro Tips',
