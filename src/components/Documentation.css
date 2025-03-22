@@ -1,0 +1,162 @@
+.documentation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.documentation {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 1200px;
+  max-height: 90vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.documentation-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+}
+
+.documentation-header h2 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 1.5rem;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  cursor: pointer;
+  color: #64748b;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.2s;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-button:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.documentation-content {
+  display: flex;
+  height: calc(90vh - 80px);
+}
+
+.doc-sidebar {
+  width: 240px;
+  border-right: 1px solid #e2e8f0;
+  padding: 1.5rem 1rem;
+  background: #f8fafc;
+  overflow-y: auto;
+}
+
+.doc-nav-item {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.doc-nav-icon {
+  font-size: 1.25rem;
+}
+
+.doc-nav-text {
+  font-size: 1rem;
+}
+
+.doc-nav-item:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.doc-nav-item.active {
+  background: #0ea5e9;
+  color: white;
+}
+
+.doc-content {
+  flex: 1;
+  padding: 1.5rem 2rem;
+  overflow-y: auto;
+}
+
+.doc-content-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.section-icon {
+  font-size: 2rem;
+}
+
+.doc-section {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e2e8f0;
+}
+
+.doc-section h3 {
+  color: #0f172a;
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+}
+
+.doc-text p {
+  color: #475569;
+  line-height: 1.6;
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .documentation-content {
+    flex-direction: column;
+  }
+
+  .doc-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1rem;
+  }
+
+  .doc-content {
+    padding: 1rem;
+  }
+}

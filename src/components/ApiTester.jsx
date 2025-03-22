@@ -5,8 +5,14 @@ import LoadingOverlay from './LoadingOverlay';
 import DataVisualization from './DataVisualization';
 import Settings from './Settings';
 import ApiTemplates from './ApiTemplates';
+import Documentation from './Documentation';
+
 
 const ApiTester = () => {
+  // Add this with other state declarations at the top
+  const [showDocs, setShowDocs] = useState(false);
+
+
   // Add these state declarations at the top with other states
   const [showSettings, setShowSettings] = useState(false);
   const [settings, setSettings] = useState(() => {
@@ -221,7 +227,6 @@ const ApiTester = () => {
     setTimeout(() => setNotification(null), 3000); // Hide after 3 seconds
   };
   
-  // Add notification display in JSX (add this right after the toolbar div)
   return (
     <div className="api-tester">
       <LoadingOverlay isLoading={loading} />
@@ -253,7 +258,17 @@ const ApiTester = () => {
         >
           Settings
         </button>
+        <button 
+          type="button" 
+          className="toolbar-btn"
+          onClick={() => setShowDocs(!showDocs)}
+        >
+          {showDocs ? 'Hide Docs' : 'Documentation'}
+        </button>
       </div>
+      
+      {/* Add Documentation component after toolbar and before form */}
+      {showDocs && <Documentation onClose={() => setShowDocs(false)} />}
 
       {showSettings && (
         <Settings
