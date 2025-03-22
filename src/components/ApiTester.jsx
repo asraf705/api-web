@@ -2,8 +2,48 @@ import React, { useState, useEffect } from 'react';
 import './ApiTester.css';
 import History from './History';
 import LoadingOverlay from './LoadingOverlay';
+import DataVisualization from './DataVisualization';
+import Settings from './Settings';
+import ApiTemplates from './ApiTemplates';
 
 const ApiTester = () => {
+  // Add these state declarations at the top with other states
+  const [showSettings, setShowSettings] = useState(false);
+  const [settings, setSettings] = useState(() => {
+    const savedSettings = localStorage.getItem('apiTesterSettings');
+    return savedSettings ? JSON.parse(savedSettings) : {
+      defaultMethod: 'GET',
+      defaultHeaders: [{ key: 'Content-Type', value: 'application/json' }],
+      theme: 'light',
+      responseFormat: 'pretty',
+      timeoutDuration: 30000,
+      maxHistoryItems: 50,
+      autoSaveHistory: true
+    };
+  });
+
+  // Add useEffect for settings
+  // Update the useEffect for settings to handle system theme
+  useEffect(() => {
+    localStorage.setItem('apiTesterSettings', JSON.stringify(settings));
+    
+    // Handle theme setting
+    if (settings.theme === 'system') {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      
+      // Listen for system theme changes
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleThemeChange = (e) => {
+        document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+      };
+      
+      mediaQuery.addEventListener('change', handleThemeChange);
+      return () => mediaQuery.removeEventListener('change', handleThemeChange);
+    } else {
+      document.documentElement.setAttribute('data-theme', settings.theme);
+    }
+  }, [settings]);
   const [url, setUrl] = useState('');
   const [method, setMethod] = useState('GET');
   const [headers, setHeaders] = useState([{ key: '', value: '' }]);
@@ -111,22 +151,22 @@ const ApiTester = () => {
     e.preventDefault();
     setLoading(true);
     const startTime = performance.now();
-
+  
     const requestHeaders = {};
     headers.forEach(header => {
       if (header.key && header.value) {
         requestHeaders[header.key] = header.value;
       }
     });
-    setLastRequestHeaders(requestHeaders); // Add this line
-
+    setLastRequestHeaders(requestHeaders);
+  
     try {
       const response = await fetch(url, {
         method,
         headers: requestHeaders,
         body: method !== 'GET' ? body : undefined
       });
-
+  
       const endTime = performance.now();
       setResponseTime(endTime - startTime);
       
@@ -135,13 +175,22 @@ const ApiTester = () => {
         responseHeadersObj[key] = value;
       });
       setResponseHeaders(responseHeadersObj);
-
-      const data = await response.json();
+  
+      // Check content type to handle different response formats
+      const contentType = response.headers.get('content-type');
+      let responseData;
+  
+      if (contentType && contentType.includes('application/json')) {
+        responseData = await response.json();
+      } else {
+        responseData = await response.text();
+      }
+  
       setResponse({
         status: response.status,
-        data: JSON.stringify(data, null, 2)
+        data: typeof responseData === 'string' ? responseData : JSON.stringify(responseData, null, 2)
       });
-
+  
       // Save to history
       setHistory(prev => [...prev, {
         url,
@@ -153,10 +202,10 @@ const ApiTester = () => {
     } catch (error) {
       setResponse({
         status: 'Error',
-        data: error.message
+        data: error.message || 'Failed to fetch'
       });
     }
-
+  
     setLoading(false);
   };
 
@@ -213,7 +262,29 @@ const ApiTester = () => {
         <button type="button" className="toolbar-btn" onClick={() => document.getElementById('import-file').click()}>
           Import
         </button>
+        <button 
+          type="button" 
+          className="toolbar-btn"
+          onClick={() => setShowSettings(true)}
+        >
+          Settings
+        </button>
       </div>
+
+      {showSettings && (
+        <Settings
+          onClose={() => setShowSettings(false)}
+          onSave={(newSettings) => {
+            setSettings(newSettings);
+            // Apply settings
+            setMethod(newSettings.defaultMethod);
+            if (newSettings.defaultHeaders.length > 0) {
+              setHeaders(newSettings.defaultHeaders);
+            }
+            document.documentElement.setAttribute('data-theme', newSettings.theme);
+          }}
+        />
+      )}
 
       {showHistory && (
         <History
@@ -316,19 +387,23 @@ const ApiTester = () => {
                   response: {
                     status: response.status,
                     headers: responseHeaders,
-                    data: JSON.parse(response.data),
+                    // Safely parse the response data
+                    data: typeof response.data === 'string' ? 
+                      (response.data.startsWith('{') || response.data.startsWith('[') ? 
+                        JSON.parse(response.data) : response.data) : 
+                      response.data,
                     responseTime: responseTime
                   },
                   timestamp: new Date().toISOString()
                 };
                 
                 const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-                const downloadUrl = URL.createObjectURL(blob);  // Changed 'url' to 'downloadUrl'
+                const downloadUrl = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = downloadUrl;
                 a.download = `api-response-${new Date().getTime()}.json`;
                 a.click();
-                URL.revokeObjectURL(downloadUrl);  // Changed here too
+                URL.revokeObjectURL(downloadUrl);
               }}
             >
               Export Response
@@ -347,6 +422,16 @@ const ApiTester = () => {
             </div>
           )}
           <pre>{response.data}</pre>
+          <div className="visualization-section">
+            <h3>Data Visualization</h3>
+            <DataVisualization apiData={
+              typeof response.data === 'string' ? 
+                (response.data.startsWith('{') || response.data.startsWith('[') ? 
+                  JSON.parse(response.data) : null) : 
+              response.data
+            } 
+          />
+          </div>
         </div>
       )}
     </div>

@@ -1,62 +1,70 @@
 import React from 'react';
+import './ApiTemplates.css';
 
 const ApiTemplates = ({ onSelectTemplate }) => {
-  const templates = [
-    {
-      name: 'Basic GET Request',
-      method: 'GET',
-      url: 'https://api.example.com/data',
-      headers: [{ key: 'Accept', value: 'application/json' }],
-      body: ''
+  const templates = {
+    github: {
+      category: 'GitHub',
+      apis: [
+        {
+          name: 'List Repositories',
+          method: 'GET',
+          url: 'https://api.github.com/users/{username}/repos',
+          headers: [
+            { key: 'Accept', value: 'application/vnd.github.v3+json' }
+          ]
+        },
+        {
+          name: 'Get User Info',
+          method: 'GET',
+          url: 'https://api.github.com/users/{username}',
+          headers: [
+            { key: 'Accept', value: 'application/vnd.github.v3+json' }
+          ]
+        }
+      ]
     },
-    {
-      name: 'Create Resource (POST)',
-      method: 'POST',
-      url: 'https://api.example.com/resources',
-      headers: [
-        { key: 'Content-Type', value: 'application/json' },
-        { key: 'Accept', value: 'application/json' }
-      ],
-      body: JSON.stringify({
-        name: 'Example',
-        description: 'Description here'
-      }, null, 2)
+    weather: {
+      category: 'OpenWeatherMap',
+      apis: [
+        {
+          name: 'Current Weather',
+          method: 'GET',
+          url: 'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={apiKey}',
+          headers: []
+        }
+      ]
     },
-    {
-      name: 'Update Resource (PUT)',
-      method: 'PUT',
-      url: 'https://api.example.com/resources/1',
-      headers: [
-        { key: 'Content-Type', value: 'application/json' },
-        { key: 'Accept', value: 'application/json' }
-      ],
-      body: JSON.stringify({
-        id: 1,
-        name: 'Updated Example',
-        description: 'Updated description'
-      }, null, 2)
-    },
-    {
-      name: 'Authentication Request',
-      method: 'POST',
-      url: 'https://api.example.com/auth/login',
-      headers: [{ key: 'Content-Type', value: 'application/json' }],
-      body: JSON.stringify({
-        username: 'user@example.com',
-        password: 'password123'
-      }, null, 2)
+    twitter: {
+      category: 'Twitter',
+      apis: [
+        {
+          name: 'User Timeline',
+          method: 'GET',
+          url: 'https://api.twitter.com/2/users/{user_id}/tweets',
+          headers: [
+            { key: 'Authorization', value: 'Bearer {token}' }
+          ]
+        }
+      ]
     }
-  ];
+  };
 
   return (
     <div className="api-templates">
       <h3>API Templates</h3>
-      <div className="template-grid">
-        {templates.map((template, index) => (
-          <div key={index} className="template-card" onClick={() => onSelectTemplate(template)}>
-            <h4>{template.name}</h4>
-            <div className="template-method">{template.method}</div>
-            <div className="template-url">{template.url}</div>
+      <div className="templates-grid">
+        {Object.entries(templates).map(([key, category]) => (
+          <div key={key} className="template-category">
+            <h4>{category.category}</h4>
+            <div className="template-list">
+              {category.apis.map((api, index) => (
+                <div key={index} className="template-item" onClick={() => onSelectTemplate(api)}>
+                  <div className="template-name">{api.name}</div>
+                  <div className="template-method">{api.method}</div>
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>
