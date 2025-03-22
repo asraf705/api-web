@@ -306,6 +306,111 @@ button.add-header-btn:hover {
   background-color: #f8fafc;
   border-radius: 4px;
   border: 1px solid var(--border-color);
+  align-items: center;
+}
+
+/* Action Menu Styles */
+.action-menu {
+  position: relative;
+}
+
+.action-menu-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #0891b2;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.action-menu-btn svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s;
+}
+
+.action-menu-btn.active svg {
+  transform: rotate(180deg);
+}
+
+.action-menu-items {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-width: 160px;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.2s;
+}
+
+.action-menu-items.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.action-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.action-menu-item:hover {
+  background-color: #f1f5f9;
+}
+
+.action-menu-item svg {
+  width: 16px;
+  height: 16px;
+  color: #64748b;
+}
+
+/* Hide original export/import buttons */
+.toolbar-btn.export-btn,
+.toolbar-btn.import-btn {
+  display: none;
+}
+
+/* Responsive styles for action menu */
+@media (max-width: 768px) {
+  .action-menu-items {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 12px 12px 0 0;
+    padding: 1rem;
+    transform: translateY(100%);
+  }
+
+  .action-menu-items.show {
+    transform: translateY(0);
+  }
+
+  .action-menu-item {
+    padding: 1rem;
+    justify-content: center;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .action-menu-item:last-child {
+    border-bottom: none;
+  }
 }
 
 .toolbar-btn {
@@ -598,4 +703,231 @@ button.add-header-btn {
 
 .export-response-btn:active {
   transform: translateY(1px);
+}
+
+/* Performance Monitoring Styles */
+.performance-metrics {
+  background-color: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.metric-card {
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 1rem;
+}
+
+.metric-label {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.metric-value.good { color: #059669; }
+.metric-value.warning { color: #d97706; }
+.metric-value.critical { color: #dc2626; }
+
+/* Performance Alert Settings */
+.performance-settings {
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.threshold-input {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0.5rem 0;
+}
+
+.threshold-input label {
+  min-width: 120px;
+  color: #64748b;
+}
+
+.threshold-input input {
+  width: 100px;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+/* Performance Chart */
+.performance-chart {
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 1rem;
+  margin-top: 1rem;
+  height: 200px;
+}
+
+/* Performance Indicators */
+.performance-indicator {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-left: 0.5rem;
+}
+
+.performance-indicator.good {
+  background-color: #dcfce7;
+  color: #059669;
+}
+
+.performance-indicator.warning {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.performance-indicator.critical {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+/* Performance Alert Toast */
+.performance-alert {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 1rem;
+  border-radius: 4px;
+  background-color: #fee2e2;
+  color: #dc2626;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: slideUp 0.3s ease-out;
+  z-index: 1000;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive adjustments for performance monitoring */
+@media (max-width: 768px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .threshold-input {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .threshold-input input {
+    width: 100%;
+  }
+
+  .performance-chart {
+    height: 150px;
+  }
+}
+
+/* Action Dropdown Styles */
+.action-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.action-dropdown-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #0891b2;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.action-dropdown-content {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  min-width: 160px;
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: none;
+}
+
+.action-dropdown-content.show {
+  display: block;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.action-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.action-dropdown-item:hover {
+  background-color: #f1f5f9;
+}
+
+.action-dropdown-item:first-child {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.action-dropdown-item:last-child {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments for action dropdown */
+@media (max-width: 768px) {
+  .action-dropdown-content {
+    right: auto;
+    left: 0;
+    width: 100%;
+  }
 }

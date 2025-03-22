@@ -268,13 +268,7 @@ const ApiTester = () => {
     <div className="api-tester">
       <LoadingOverlay isLoading={loading} />
       <div className="toolbar">
-        <button 
-          type="button" 
-          className="history-btn toolbar-btn"
-          onClick={() => setShowHistory(!showHistory)}
-        >
-          {showHistory ? 'Hide History' : 'Show History'}
-        </button>
+        
         <button type="button" className="toolbar-btn" onClick={exportHistory}>
           Export
         </button>
@@ -287,6 +281,13 @@ const ApiTester = () => {
         />
         <button type="button" className="toolbar-btn" onClick={() => document.getElementById('import-file').click()}>
           Import
+        </button>
+        <button 
+          type="button" 
+          className="history-btn toolbar-btn"
+          onClick={() => setShowHistory(!showHistory)}
+        >
+          {showHistory ? 'Hide History' : 'Show History'}
         </button>
         <button 
           type="button" 
