@@ -88,13 +88,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
+Your Name - [Asrafuzzaman](https://asraf-profile.vercel.app/)
 
-Project Link: [https://github.com/yourusername/dev-extension](https://github.com/yourusername/dev-extension)
+Project Link: [https://github.com/asraf705/dev-extension](https://github.com/asraf705/dev-extension)
 ```
 
 Remember to:
-1. Replace `yourusername` with your actual GitHub username
+1. Replace `asraf705` with your actual GitHub username
 2. Update the social media links
 3. Add any specific installation requirements
 4. Modify the license section according to your chosen license
