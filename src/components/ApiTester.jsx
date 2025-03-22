@@ -23,26 +23,10 @@ const ApiTester = () => {
   });
 
   // Add useEffect for settings
-  // Update the useEffect for settings to handle system theme
   useEffect(() => {
     localStorage.setItem('apiTesterSettings', JSON.stringify(settings));
-    
-    // Handle theme setting
-    if (settings.theme === 'system') {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-      
-      // Listen for system theme changes
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      const handleThemeChange = (e) => {
-        document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
-      };
-      
-      mediaQuery.addEventListener('change', handleThemeChange);
-      return () => mediaQuery.removeEventListener('change', handleThemeChange);
-    } else {
-      document.documentElement.setAttribute('data-theme', settings.theme);
-    }
+    // Apply theme
+    document.documentElement.setAttribute('data-theme', settings.theme);
   }, [settings]);
   const [url, setUrl] = useState('');
   const [method, setMethod] = useState('GET');

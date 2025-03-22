@@ -505,55 +505,10 @@ button.add-header-btn:hover {
   color: #ef4444;
 }
 
-/* Add theme variables */
-:root[data-theme="light"] {
-  --bg-color: #ffffff;
-  --text-color: #1e293b;
-  --border-color: #e2e8f0;
-  --primary-color: #3b82f6;
-  --secondary-bg: #f8fafc;
-  --hover-bg: #f1f5f9;
-}
-
-:root[data-theme="dark"] {
-  --bg-color: #1e293b;
-  --text-color: #f8fafc;
-  --border-color: #475569;
-  --primary-color: #60a5fa;
-  --secondary-bg: #334155;
-  --hover-bg: #475569;
-}
-
 .api-tester {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-}
-
-/* Update existing elements to use theme variables */
-.toolbar-btn {
-  background-color: var(--secondary-bg);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-}
-
-.toolbar-btn:hover {
-  background-color: var(--hover-bg);
-}
-
-input, select, textarea {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-}
-
-.response-section {
-  background-color: var(--secondary-bg);
-  border: 1px solid var(--border-color);
-}
-
-pre {
-  background-color: var(--bg-color);
-  color: var(--text-color);
+  background-color: #f8fafc;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Method colors - using psychology for HTTP methods */
