@@ -115,8 +115,7 @@ const DataVisualization = ({ apiData }) => {
           <Line data={lineChartData} options={options} />
         </div>
       </div>
-
-      <div className="chart-container">
+      {/* <div className="chart-container">
         <h3>Bar Chart</h3>
         <div className="chart">
           <Bar data={barChartData} options={options} />
@@ -128,7 +127,7 @@ const DataVisualization = ({ apiData }) => {
         <div className="chart">
           <Pie data={pieChartData} options={options} />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

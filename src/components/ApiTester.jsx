@@ -1,57 +1,58 @@
-import React, { useState, useEffect } from 'react';
-import './ApiTester.css';
-import History from './History';
-import LoadingOverlay from './LoadingOverlay';
-import DataVisualization from './DataVisualization';
-import Settings from './Settings';
-import ApiTemplates from './ApiTemplates';
-import Documentation from './Documentation';
-import { saveLog } from '../utils/logUtils'; // Add this import
-
+import React, { useState, useEffect } from "react";
+import "./ApiTester.css";
+import History from "./History";
+import LoadingOverlay from "./LoadingOverlay";
+import DataVisualization from "./DataVisualization";
+import Settings from "./Settings";
+import ApiTemplates from "./ApiTemplates";
+import Documentation from "./Documentation";
+import { saveLog } from "../utils/logUtils"; // Add this import
+import PerformanceMonitor from "./PerformanceMonitor";
 
 const ApiTester = () => {
   // Add this with other state declarations at the top
   const [showDocs, setShowDocs] = useState(false);
-
-
-  // Add these state declarations at the top with other states
+  const [showPerformance, setShowPerformance] = useState(false); // Add this line
   const [showSettings, setShowSettings] = useState(false);
+
   const [settings, setSettings] = useState(() => {
-    const savedSettings = localStorage.getItem('apiTesterSettings');
-    return savedSettings ? JSON.parse(savedSettings) : {
-      defaultMethod: 'GET',
-      defaultHeaders: [{ key: 'Content-Type', value: 'application/json' }],
-      theme: 'light',
-      responseFormat: 'pretty',
-      timeoutDuration: 30000,
-      maxHistoryItems: 50,
-      autoSaveHistory: true
-    };
+    const savedSettings = localStorage.getItem("apiTesterSettings");
+    return savedSettings
+      ? JSON.parse(savedSettings)
+      : {
+          defaultMethod: "GET",
+          defaultHeaders: [{ key: "Content-Type", value: "application/json" }],
+          theme: "light",
+          responseFormat: "pretty",
+          timeoutDuration: 30000,
+          maxHistoryItems: 50,
+          autoSaveHistory: true,
+        };
   });
 
   // Add useEffect for settings
   useEffect(() => {
-    localStorage.setItem('apiTesterSettings', JSON.stringify(settings));
+    localStorage.setItem("apiTesterSettings", JSON.stringify(settings));
     // Apply theme
-    document.documentElement.setAttribute('data-theme', settings.theme);
+    document.documentElement.setAttribute("data-theme", settings.theme);
   }, [settings]);
-  const [url, setUrl] = useState('');
-  const [method, setMethod] = useState('GET');
-  const [headers, setHeaders] = useState([{ key: '', value: '' }]);
-  const [body, setBody] = useState('');
+  const [url, setUrl] = useState("");
+  const [method, setMethod] = useState("GET");
+  const [headers, setHeaders] = useState([{ key: "", value: "" }]);
+  const [body, setBody] = useState("");
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   // Remove showFavorites state
   const [responseTime, setResponseTime] = useState(null);
   const [responseHeaders, setResponseHeaders] = useState(null);
-  const [lastRequestHeaders, setLastRequestHeaders] = useState(null);  // Add this line
+  const [lastRequestHeaders, setLastRequestHeaders] = useState(null); // Add this line
   const [history, setHistory] = useState(() => {
-    const savedHistory = localStorage.getItem('apiTesterHistory');
+    const savedHistory = localStorage.getItem("apiTesterHistory");
     return savedHistory ? JSON.parse(savedHistory) : [];
   });
   const [favorites, setFavorites] = useState(() => {
-    const savedFavorites = localStorage.getItem('apiTesterFavorites');
+    const savedFavorites = localStorage.getItem("apiTesterFavorites");
     return savedFavorites ? JSON.parse(savedFavorites) : [];
   });
 
@@ -62,7 +63,7 @@ const ApiTester = () => {
   };
 
   const addHeader = () => {
-    setHeaders([...headers, { key: '', value: '' }]);
+    setHeaders([...headers, { key: "", value: "" }]);
   };
 
   const removeHeader = (index) => {
@@ -72,22 +73,22 @@ const ApiTester = () => {
 
   const exportHistory = () => {
     const data = JSON.stringify({ history, favorites }, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
+    const blob = new Blob([data], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'api-tester-history.json';
+    a.download = "api-tester-history.json";
     a.click();
     URL.revokeObjectURL(url);
   };
 
   // Add useEffect to save history and favorites to localStorage
   useEffect(() => {
-    localStorage.setItem('apiTesterHistory', JSON.stringify(history));
+    localStorage.setItem("apiTesterHistory", JSON.stringify(history));
   }, [history]);
 
   useEffect(() => {
-    localStorage.setItem('apiTesterFavorites', JSON.stringify(favorites));
+    localStorage.setItem("apiTesterFavorites", JSON.stringify(favorites));
   }, [favorites]);
 
   // Update importHistory function
@@ -102,37 +103,45 @@ const ApiTester = () => {
             // Update history and favorites in state and localStorage
             if (Array.isArray(data.history)) {
               setHistory(data.history);
-              localStorage.setItem('apiTesterHistory', JSON.stringify(data.history));
+              localStorage.setItem(
+                "apiTesterHistory",
+                JSON.stringify(data.history)
+              );
             }
-            
+
             if (Array.isArray(data.favorites)) {
               setFavorites(data.favorites);
-              localStorage.setItem('apiTesterFavorites', JSON.stringify(data.favorites));
+              localStorage.setItem(
+                "apiTesterFavorites",
+                JSON.stringify(data.favorites)
+              );
             }
-            
-            setNotification('History imported successfully');
+
+            setNotification("History imported successfully");
             setTimeout(() => setNotification(null), 3000);
           }
         } catch (error) {
-          console.error('Import error:', error);
-          setNotification('Error: Invalid JSON file format');
+          console.error("Import error:", error);
+          setNotification("Error: Invalid JSON file format");
           setTimeout(() => setNotification(null), 3000);
         }
       };
       reader.readAsText(file);
     }
-    event.target.value = '';
+    event.target.value = "";
   };
 
   const toggleFavorite = (item) => {
-    const isFavorite = favorites.some(fav => 
-      fav.url === item.url && fav.method === item.method
+    const isFavorite = favorites.some(
+      (fav) => fav.url === item.url && fav.method === item.method
     );
-    
+
     if (isFavorite) {
-      setFavorites(favorites.filter(fav => 
-        fav.url !== item.url || fav.method !== item.method
-      ));
+      setFavorites(
+        favorites.filter(
+          (fav) => fav.url !== item.url || fav.method !== item.method
+        )
+      );
     } else {
       setFavorites([...favorites, item]);
     }
@@ -150,18 +159,22 @@ const ApiTester = () => {
       if (Array.isArray(item.headers)) {
         setHeaders(item.headers);
       } else {
-        const headerArray = Object.entries(item.headers).map(([key, value]) => ({
-          key,
-          value
-        }));
-        setHeaders(headerArray.length > 0 ? headerArray : [{ key: '', value: '' }]);
+        const headerArray = Object.entries(item.headers).map(
+          ([key, value]) => ({
+            key,
+            value,
+          })
+        );
+        setHeaders(
+          headerArray.length > 0 ? headerArray : [{ key: "", value: "" }]
+        );
       }
     } else {
-      setHeaders([{ key: '', value: '' }]);
+      setHeaders([{ key: "", value: "" }]);
     }
-    setBody(item.body || '');
+    setBody(item.body || "");
 
-    setNotification('Request loaded successfully');
+    setNotification("Request loaded successfully");
     setTimeout(() => setNotification(null), 3000);
   };
 
@@ -173,7 +186,7 @@ const ApiTester = () => {
     const startTime = performance.now();
 
     const requestHeaders = {};
-    headers.forEach(header => {
+    headers.forEach((header) => {
       if (header.key && header.value) {
         requestHeaders[header.key] = header.value;
       }
@@ -182,14 +195,14 @@ const ApiTester = () => {
 
     try {
       // Validate URL before making request
-      if (!url || !url.startsWith('http')) {
-        throw new Error('Please enter a valid URL starting with http or https');
+      if (!url || !url.startsWith("http")) {
+        throw new Error("Please enter a valid URL starting with http or https");
       }
 
       const response = await fetch(url, {
         method,
         headers: requestHeaders,
-        body: method !== 'GET' ? body : undefined
+        body: method !== "GET" ? body : undefined,
       });
 
       const endTime = performance.now();
@@ -197,14 +210,14 @@ const ApiTester = () => {
 
       // Log successful request
       saveLog({
-        type: 'request',
-        status: 'success',
+        type: "request",
+        status: "success",
         url,
         method,
         headers: requestHeaders,
         body,
         responseTime: endTime - startTime,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       const responseHeadersObj = {};
@@ -212,51 +225,57 @@ const ApiTester = () => {
         responseHeadersObj[key] = value;
       });
       setResponseHeaders(responseHeadersObj);
-  
+
       // Check content type to handle different response formats
-      const contentType = response.headers.get('content-type');
+      const contentType = response.headers.get("content-type");
       let responseData;
-  
-      if (contentType && contentType.includes('application/json')) {
+
+      if (contentType && contentType.includes("application/json")) {
         responseData = await response.json();
       } else {
         responseData = await response.text();
       }
-  
+
       setResponse({
         status: response.status,
-        data: typeof responseData === 'string' ? responseData : JSON.stringify(responseData, null, 2)
+        data:
+          typeof responseData === "string"
+            ? responseData
+            : JSON.stringify(responseData, null, 2),
       });
-  
+
       // Save to history
-      setHistory(prev => [...prev, {
-        url,
-        method,
-        headers: requestHeaders,
-        body,
-        timestamp: new Date().toISOString()
-      }]);
+      setHistory((prev) => [
+        ...prev,
+        {
+          url,
+          method,
+          headers: requestHeaders,
+          body,
+          timestamp: new Date().toISOString(),
+        },
+      ]);
     } catch (error) {
       const endTime = performance.now();
       setResponseTime(endTime - startTime);
-      
+
       // Log error
       saveLog({
-        type: 'request',
-        status: 'error',
+        type: "request",
+        status: "error",
         url,
         method,
         headers: requestHeaders,
         body,
         error: error.message,
         responseTime: endTime - startTime,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       setError(error.message);
       setResponse({
-        status: 'Error',
-        data: error.message || 'Failed to fetch'
+        status: "Error",
+        data: error.message || "Failed to fetch",
       });
     } finally {
       setLoading(false);
@@ -268,7 +287,14 @@ const ApiTester = () => {
     <div className="api-tester">
       <LoadingOverlay isLoading={loading} />
       <div className="toolbar">
-        
+        <button
+          type="button"
+          className="toolbar-btn"
+          onClick={() => setShowPerformance(!showPerformance)}
+        >
+          {showPerformance ? "Hide Performance" : "Performance"}
+        </button>
+
         <button type="button" className="toolbar-btn" onClick={exportHistory}>
           Export
         </button>
@@ -276,35 +302,46 @@ const ApiTester = () => {
           type="file"
           accept=".json"
           onChange={importHistory}
-          style={{ display: 'none' }}
+          style={{ display: "none" }}
           id="import-file"
         />
-        <button type="button" className="toolbar-btn" onClick={() => document.getElementById('import-file').click()}>
+        <button
+          type="button"
+          className="toolbar-btn"
+          onClick={() => document.getElementById("import-file").click()}
+        >
           Import
         </button>
-        <button 
-          type="button" 
+        <button
+          type="button"
           className="history-btn toolbar-btn"
           onClick={() => setShowHistory(!showHistory)}
         >
-          {showHistory ? 'Hide History' : 'Show History'}
+          {showHistory ? "Hide History" : "Show History"}
         </button>
-        <button 
-          type="button" 
+        <button
+          type="button"
           className="toolbar-btn"
           onClick={() => setShowSettings(true)}
         >
           Settings
         </button>
-        <button 
-          type="button" 
+        <button
+          type="button"
           className="toolbar-btn"
           onClick={() => setShowDocs(!showDocs)}
         >
-          {showDocs ? 'Hide Docs' : 'Documentation'}
+          {showDocs ? "Hide Docs" : "Documentation"}
         </button>
       </div>
-      
+
+      {/* Add PerformanceMonitor component after toolbar */}
+      {showPerformance && (
+        <div className="performance-section">
+          <PerformanceMonitor />
+        </div>
+      )}
+
       {/* Add Documentation component after toolbar and before form */}
       {showDocs && <Documentation onClose={() => setShowDocs(false)} />}
 
@@ -318,14 +355,17 @@ const ApiTester = () => {
             if (newSettings.defaultHeaders.length > 0) {
               setHeaders(newSettings.defaultHeaders);
             }
-            document.documentElement.setAttribute('data-theme', newSettings.theme);
+            document.documentElement.setAttribute(
+              "data-theme",
+              newSettings.theme
+            );
           }}
         />
       )}
 
       {showHistory && (
         <History
-          history={[...history].reverse()}  // Reverse the history array to show latest first
+          history={[...history].reverse()} // Reverse the history array to show latest first
           favorites={favorites}
           onLoadRequest={loadRequest}
           onToggleFavorite={toggleFavorite}
@@ -333,17 +373,9 @@ const ApiTester = () => {
         />
       )}
 
-      {notification && (
-        <div className="notification">
-          {notification}
-        </div>
-      )}
+      {notification && <div className="notification">{notification}</div>}
 
-      {error && (
-        <div className="error-message">
-          Error: {error}
-        </div>
-      )}
+      {error && <div className="error-message">Error: {error}</div>}
 
       <form onSubmit={handleSubmit}>
         <div className="url-container">
@@ -371,21 +403,29 @@ const ApiTester = () => {
                 type="text"
                 placeholder="Header key"
                 value={header.key}
-                onChange={(e) => handleHeaderChange(index, 'key', e.target.value)}
+                onChange={(e) =>
+                  handleHeaderChange(index, "key", e.target.value)
+                }
               />
               <input
                 type="text"
                 placeholder="Header value"
                 value={header.value}
-                onChange={(e) => handleHeaderChange(index, 'value', e.target.value)}
+                onChange={(e) =>
+                  handleHeaderChange(index, "value", e.target.value)
+                }
               />
-              <button type="button" onClick={() => removeHeader(index)}>Remove</button>
+              <button type="button" onClick={() => removeHeader(index)}>
+                Remove
+              </button>
             </div>
           ))}
-          <button type="button" onClick={addHeader}>Add Header</button>
+          <button type="button" onClick={addHeader}>
+            Add Header
+          </button>
         </div>
 
-        {method !== 'GET' && (
+        {method !== "GET" && (
           <div className="body-section">
             <h3>Request Body</h3>
             <textarea
@@ -398,18 +438,26 @@ const ApiTester = () => {
 
         {/* Update the submit button */}
         <button type="submit" disabled={loading}>
-          {loading ? 'Processing...' : 'Send Request'}
+          {loading ? "Processing..." : "Send Request"}
         </button>
 
         {/* Update the response time display */}
         {responseTime && (
-          <div className={`response-time ${
-            responseTime < 300 ? 'fast' : 
-            responseTime < 1000 ? 'medium' : 'slow'
-          }`}>
+          <div
+            className={`response-time ${
+              responseTime < 300
+                ? "fast"
+                : responseTime < 1000
+                ? "medium"
+                : "slow"
+            }`}
+          >
             Response Time: {responseTime.toFixed(2)}ms
-            {responseTime < 300 ? ' (Fast)' : 
-             responseTime < 1000 ? ' (Good)' : ' (Slow)'}
+            {responseTime < 300
+              ? " (Fast)"
+              : responseTime < 1000
+              ? " (Good)"
+              : " (Slow)"}
           </div>
         )}
       </form>
@@ -418,8 +466,8 @@ const ApiTester = () => {
         <div className="response-section">
           <div className="response-header">
             <h3>Response</h3>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="export-response-btn"
               onClick={() => {
                 const exportData = {
@@ -431,18 +479,23 @@ const ApiTester = () => {
                     status: response.status,
                     headers: responseHeaders,
                     // Safely parse the response data
-                    data: typeof response.data === 'string' ? 
-                      (response.data.startsWith('{') || response.data.startsWith('[') ? 
-                        JSON.parse(response.data) : response.data) : 
-                      response.data,
-                    responseTime: responseTime
+                    data:
+                      typeof response.data === "string"
+                        ? response.data.startsWith("{") ||
+                          response.data.startsWith("[")
+                          ? JSON.parse(response.data)
+                          : response.data
+                        : response.data,
+                    responseTime: responseTime,
                   },
-                  timestamp: new Date().toISOString()
+                  timestamp: new Date().toISOString(),
                 };
-                
-                const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+                  type: "application/json",
+                });
                 const downloadUrl = URL.createObjectURL(blob);
-                const a = document.createElement('a');
+                const a = document.createElement("a");
                 a.href = downloadUrl;
                 a.download = `api-response-${new Date().getTime()}.json`;
                 a.click();
@@ -467,13 +520,16 @@ const ApiTester = () => {
           <pre>{response.data}</pre>
           <div className="visualization-section">
             <h3>Data Visualization</h3>
-            <DataVisualization apiData={
-              typeof response.data === 'string' ? 
-                (response.data.startsWith('{') || response.data.startsWith('[') ? 
-                  JSON.parse(response.data) : null) : 
-              response.data
-            } 
-          />
+            <DataVisualization
+              apiData={
+                typeof response.data === "string"
+                  ? response.data.startsWith("{") ||
+                    response.data.startsWith("[")
+                    ? JSON.parse(response.data)
+                    : null
+                  : response.data
+              }
+            />
           </div>
         </div>
       )}
