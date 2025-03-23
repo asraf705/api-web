@@ -31,6 +31,34 @@ const PerformanceMonitor = () => {
   const [performanceData, setPerformanceData] = useState([]);
   const [isMonitoring, setIsMonitoring] = useState(false);
   const [intervalTime, setIntervalTime] = useState(5000);
+
+  const fetchExtensionData = useCallback(async () => {
+    if (!isMonitoring || !apiUrl) return;
+
+    if (window.chrome && window.chrome.runtime) {
+      window.chrome.runtime.sendMessage({ type: 'getPerformanceData' }, (response) => {
+      if (response && response.performanceData && response.performanceData[apiUrl]) {
+        const data = response.performanceData[apiUrl];
+        const newPerformanceData = data.timestamps.map((timestamp, index) => ({
+          timestamp: new Date(timestamp).toLocaleTimeString(),
+          responseTime: data.responseTimes[index],
+          status: data.statusCodes[index]
+        }));
+        setPerformanceData(newPerformanceData);
+      }
+    });
+
+    if (isMonitoring) {
+      setTimeout(fetchExtensionData, intervalTime);
+    }
+    }
+  }, [isMonitoring, apiUrl, intervalTime]);
+
+  useEffect(() => {
+    if (isMonitoring) {
+      fetchExtensionData();
+    }
+  }, [isMonitoring, fetchExtensionData]);
   const [errorCount, setErrorCount] = useState(0);
   const [statusCodes, setStatusCodes] = useState({});
 
@@ -172,7 +200,7 @@ const PerformanceMonitor = () => {
   };
 
   return (
-    <div className="performance-monitor">
+    <div className="performance-monitor extension">
       <div className="monitor-controls">
         <div className="input-group">
           <input
